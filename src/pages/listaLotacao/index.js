@@ -5,6 +5,7 @@ import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
 import Usuarios from "../../server/usuario.json";
 import { FiEdit,FiTrash,FiDelete, FiFilePlus } from "react-icons/fi";
+import api from "../../server/api";
 
 
 
@@ -17,8 +18,20 @@ export default function Listalotacao(){
     const [setor,setSetor] = useState([]);
     const [usuario,setUsuario] = useState([]);
     useEffect(()=>{
+      
        mostrarlista();
     },[])
+    
+    function dataFormatada(d){
+        var data = new Date(d),
+            dia  = data.getDate().toString(),
+            diaF = (dia.length == 1) ? '0'+dia : dia,
+            mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+            mesF = (mes.length == 1) ? '0'+mes : mes,
+            anoF = data.getFullYear();
+        return diaF+"/"+mesF+"/"+anoF;
+    }
+
     function editar(i){
      window.location.href=`/editarlotacao/${i}`
     }
@@ -39,25 +52,54 @@ export default function Listalotacao(){
               break
 
         }
-    
+        if(dadosnovos.length>0){
             return dadosnovos[0].nome;
+        }else{
+            return "nome não identificado"
+        }
+            
     }
     function mostrarlista(){
         
  
-        let listaUsuarios=JSON.parse(localStorage.getItem("cd-usuarios")||"[]");
-        setUsuario(listaUsuarios);      
-        let listaEmpresas=JSON.parse(localStorage.getItem("cd-empresa")||"[]");
-        setEmpresa(listaEmpresas);      
-        let listaSetor=JSON.parse(localStorage.getItem("cd-setor")||"[]");
-        setSetor(listaSetor);      
-        let listaPatrimonio=JSON.parse(localStorage.getItem("cd-patrimonio")||"[]");
-        setPatrimonio(listaPatrimonio);   
-        let listalotacao=JSON.parse(localStorage.getItem("cd-lotacao")||"[]");
-        setLotacao(listalotacao);   
+        // let listaUsuarios=JSON.parse(localStorage.getItem("cd-usuarios")||"[]");
+        // setUsuario(listaUsuarios);      
+        // let listaEmpresas=JSON.parse(localStorage.getItem("cd-empresa")||"[]");
+        // setEmpresa(listaEmpresas);      
+        // let listaSetor=JSON.parse(localStorage.getItem("cd-setor")||"[]");
+        // setSetor(listaSetor);      
+        // let listaPatrimonio=JSON.parse(localStorage.getItem("cd-patrimonio")||"[]");
+        // setPatrimonio(listaPatrimonio);   
+        // let listalotacao=JSON.parse(localStorage.getItem("cd-lotacao")||"[]");
+        // setLotacao(listalotacao); 
+        
+        //qualquer coisa descomenta
+        api.get("lotacao")
+        .then(function(response){
+            console.log(response.data.lotacao)
+            setLotacao(response.data.lotacao)
+        })
+
+
+}
+        // api.get('/lotacao')
+        // .then(res=> {
+        //     if(res.status == 200){
+        //         setDados(res.data.lotacao);
+        //         console.log("Status"+res.status);
+
+        //         console.log(res.data.lotacao);
+        //     } else {
+        //         console.log("houve um erro na requisição")
+        //     }
+        // })
+        // .catch(function(error) {
+        //     console.log(error);
+        // });
+
   
 
-    }
+    
     function excluir(i){
         confirmAlert({
             title: 'Excluir Lotação',
@@ -66,10 +108,14 @@ export default function Listalotacao(){
               {
                 label: 'Sim',
                 onClick: () => {
-                    let dadosnovos = [];
-                    dadosnovos=lotacao.filter(item =>item.id!==i);
-                    setLotacao(dadosnovos);
-                    localStorage.setItem('cd-lotacao',JSON.stringify(dadosnovos));
+                    // let dadosnovos = [];
+                    // dadosnovos=lotacao.filter(item =>item.id!==i);
+                    // setLotacao(dadosnovos);
+                    // localStorage.setItem('cd-lotacao',JSON.stringify(dadosnovos));
+                    api.delete(`/lotação/${i}`)
+                    .then(res => {});
+                    mostrarlista();
+                    alert("Dados deletados com sucesso!");
                 }
               },
               {
@@ -119,11 +165,15 @@ export default function Listalotacao(){
                                     return(
                                     <tr key={lot.toString()}>
                                         <td>{lot.id}</td>
-                                        <td>{filtranome(lot.idemp,1)}</td>
-                                        <td>{lot.idpat}</td>
+                                        {/* <td>{filtranome(lot.idemp,1)}</td>
+                                        <td>{filtranome(lot.idpat,2)}</td>
                                         <td>{filtranome(lot.idset,3)}</td>
-                                        <td>{filtranome(lot.idusu,4)}</td>
-                                        <td>{lot.lotacao}</td>
+                                        <td>{filtranome(lot.idusu,4)}</td> */}
+                                        <td>{lot.empresa}</td>
+                                        <td>{lot.patrimonio}</td>
+                                        <td>{lot.setor}</td>
+                                        <td>{lot.usuario}</td>
+                                        <td>{dataFormatada(lot.lotacao)}</td>
                                         <td>
                                             <FiEdit
                                             color="blue"
@@ -140,7 +190,7 @@ export default function Listalotacao(){
                                             onClick={(e)=>excluir(lot.id)}
                                             cursor="pointer"
                                             />
-                                            
+                                             
                                             </td>
                                     </tr>
                                     )

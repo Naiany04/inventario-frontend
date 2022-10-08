@@ -1,12 +1,17 @@
 import React,{useState} from "react";
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
-
+import api from "../../server/api";
+import { useHistory, useParams } from "react-router-dom";
 
 
 export default function Cadastropatrimonio(){
-const [nome,setNome] = useState();
-const [msg,setMsg] = useState();
+    const navigate = useHistory();
+    const [nome,setNome] = useState();
+    const [msg,setMsg] = useState();
+    const dados={
+        nome
+    }
 
 
 
@@ -23,17 +28,30 @@ const [msg,setMsg] = useState();
                                 
             if(index===0){
                
-                let listaPatrimonio = JSON.parse(localStorage.getItem("cd-patrimonio")||"[]")
+                // let listaPatrimonio = JSON.parse(localStorage.getItem("cd-patrimonio")||"[]")
             
-                listaPatrimonio.push(
-                    {
-                        id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
-                        nome:nome
-                    }
-                )
-                localStorage.setItem("cd-patrimonio",JSON.stringify(listaPatrimonio));
-                alert("Cadastro Salvo com Sucesso!!!!");
-                window.location.href="/listapatrimonio";
+                // listaPatrimonio.push(
+                //     {
+                //         id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
+                //         nome:nome
+                //     }
+                // )
+                // localStorage.setItem("cd-patrimonio",JSON.stringify(listaPatrimonio));
+                // alert("Cadastro Salvo com Sucesso!!!!");
+                // window.location.href="/listapatrimonio";
+                api.post("patrimonio", 
+                dados,
+
+                {
+                    Headers: 
+                    {'Content-Type': 'application/json'}
+                }                
+                ).then(function (response){
+                    console.log(response.data);
+
+                    alert("Cadastro Salvo com Sucesso!!!!");
+                    window.location.href='/listapatrimonio';
+                });
             }  
     
 }

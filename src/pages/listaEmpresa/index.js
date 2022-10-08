@@ -4,6 +4,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
 import Usuarios from "../../server/usuario.json";
+import api from "../../server/api";
 import { FiEdit,FiTrash,FiDelete, FiFilePlus } from "react-icons/fi";
 
 
@@ -18,8 +19,22 @@ export default function Listaempresa(){
     }
     function mostrarlista(){
         
-        let cadastros=JSON.parse(localStorage.getItem("cd-empresa")||"[]");
-        setDados(cadastros);
+        // let cadastros=JSON.parse(localStorage.getItem("cd-empresa")||"[]");
+        // setDados(cadastros);
+        api.get('/empresa')
+        .then(res=> {
+            if(res.status == 200){
+                setDados(res.data.empresa);
+                console.log("Status"+res.status);
+
+                console.log(res.data.empresa);
+            } else {
+                console.log("houve um erro na requisição")
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
   
 
     }
@@ -31,10 +46,14 @@ export default function Listaempresa(){
               {
                 label: 'Sim',
                 onClick: () => {
-                    let dadosnovos = [];
-                    dadosnovos=dados.filter(item =>item.id!==i);
-                    setDados(dadosnovos);
-                    localStorage.setItem('cd-empresa',JSON.stringify(dadosnovos));
+                    // let dadosnovos = [];
+                    // dadosnovos=dados.filter(item =>item.id!==i);
+                    // setDados(dadosnovos);
+                    // localStorage.setItem('cd-empresa',JSON.stringify(dadosnovos));
+                    api.delete(`/usuario/${i}`)
+                    .then(res => {});
+                    mostrarlista();
+                    alert("Dados deletados com sucesso!");
                 }
               },
               {
@@ -72,7 +91,7 @@ export default function Listaempresa(){
                             <th>Id</th>
                             <th>Nome</th>
                             <th>Responsável</th>
-                            <th></th>
+                            <th>Contato</th>
                             <th></th>
                         </tr>
                      
@@ -83,6 +102,7 @@ export default function Listaempresa(){
                                         <td>{emp.id}</td>
                                         <td>{emp.nome}</td>
                                         <td>{emp.responsavel}</td>
+                                        <td>{emp.contato}</td>
                                         <td>
                                             <FiEdit
                                             color="blue"
@@ -113,7 +133,7 @@ export default function Listaempresa(){
                                 <th>Id</th>
                                 <th>Nome</th>
                                 <th>Responsável</th>
-                                <th></th>
+                                <th>Contato</th>
                                 <th></th>
                             </tr>
                             </table>

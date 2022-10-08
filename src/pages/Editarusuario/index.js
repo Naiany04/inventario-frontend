@@ -3,6 +3,7 @@ import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
 import { FiEdit,FiTrash,FiDelete, FiFilePlus } from "react-icons/fi";
 import { useParams } from "react-router-dom";
+import api from "../../server/api";
 import Usuarios from '../../server/usuario.json';
 
 
@@ -15,25 +16,50 @@ export default function Editarusuario(){
     const [msg,setMsg]=useState('');
     const [valida,setValida] = useState(false);
     const [usu,setUsu] = useState(false);
+    const dados={
+        id: idusuario,
+        nome,
+        email,
+        senha
+    }
+    const headers = {
+        'Content-Type' : 'application/json'
+    };
     
     useEffect(()=>{
        mostrarDados();
     },[])
 
             function mostrarDados(){
-                let listaUser =JSON.parse(localStorage.getItem("cd-usuarios"));
-                    listaUser.
-                        filter(value => value.id ==idusuario).
-                        map(value => {
-                            setNome(value.nome);
-                            setEmail(value.email);
-                            setSenha(value.senha);
-                            setConfSenha(value.senha);
+                // let listaUser =JSON.parse(localStorage.getItem("cd-usuarios"));
+                //     listaUser.
+                //         filter(value => value.id ==idusuario).
+                //         map(value => {
+                //             setNome(value.nome);
+                //             setEmail(value.email);
+                //             setSenha(value.senha);
+                //             setConfSenha(value.senha);
                 
-                }
-            
-                    );
+                // }
+                // );
+
+                api.get(`/usuario/${idusuario}`)
+                .then(res=> {
                 
+                    if(res.status == 200){
+                        let resultado=res.data.usuario;
+                        
+                            setNome(resultado[0].nome);
+                            setEmail(resultado[0].email);
+                            setSenha(resultado[0].senha);
+                            setConfSenha(resultado[0].senha);
+                    } else {
+                        console.log("houve um erro na requisição")
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
 
             }
 
@@ -75,19 +101,20 @@ export default function Editarusuario(){
                                     index++;
                                 }
             if(index===0){
-                let listaUser = JSON.parse(localStorage.getItem("cd-usuarios"));
-                listaUser.map((item)=>{
-                    if(item.id==idusuario){
-                        item.nome=nome;
-                        item.email=email;
-                        item.senha=senha;
-                    }
-                   
+                api.patch("usuario", 
+                dados,
 
-                })
-                localStorage.setItem("cd-usuarios",JSON.stringify(listaUser))
-                alert("Dados Salvos com sucesso!")
-                window.location.href="/listausuario";
+                {
+                    Headers: 
+                    {'Content-Type': 'application/json'}
+                }                
+                ).then(function (response){
+                    console.log(response.data);
+
+                    alert("Cadastro Salvo com Sucesso!!!!");
+                    window.location.href='/listausuario';
+                });
+                
             }
     }
 }
@@ -112,12 +139,12 @@ export default function Editarusuario(){
                         onChange={e=>setEmail(e.target.value)}
                         />
                          <label>Senha</label>
-                        <input placeholder="senha" type="text"
+                        <input placeholder="senha" type="password"
                         value={senha}
                         onChange={e=>setSenha(e.target.value)}
                         />
                          <label>Confirmar Senha</label>
-                        <input placeholder="confirmar senha" type="text"
+                        <input placeholder="confirmar senha" type="password"
                         value={confsenha}
                         onKeyUp={validarSenha}
                         onChange={e=>setConfSenha(e.target.value)}

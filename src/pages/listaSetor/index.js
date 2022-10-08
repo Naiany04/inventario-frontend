@@ -4,6 +4,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
 import Usuarios from "../../server/usuario.json";
+import api from "../../server/api";
 import { FiEdit,FiTrash,FiDelete, FiFilePlus } from "react-icons/fi";
 
 
@@ -18,8 +19,22 @@ export default function Listapatrimonio(){
     }
     function mostrarlista(){
         
-        let cadastros=JSON.parse(localStorage.getItem("cd-setor")||"[]");
-        setDados(cadastros);
+        // let cadastros=JSON.parse(localStorage.getItem("cd-setor")||"[]");
+        // setDados(cadastros);
+        api.get('/setor')
+        .then(res=> {
+            if(res.status == 200){
+                setDados(res.data.setor);
+                console.log("Status"+res.status);
+
+                console.log(res.data.setor);
+            } else {
+                console.log("houve um erro na requisição")
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
   
 
     }
@@ -31,10 +46,14 @@ export default function Listapatrimonio(){
               {
                 label: 'Sim',
                 onClick: () => {
-                    let dadosnovos = [];
-                    dadosnovos=dados.filter(item =>item.id!==i);
-                    setDados(dadosnovos);
-                    localStorage.setItem('cd-setor',JSON.stringify(dadosnovos));
+                    // let dadosnovos = [];
+                    // dadosnovos=dados.filter(item =>item.id!==i);
+                    // setDados(dadosnovos);
+                    // localStorage.setItem('cd-setor',JSON.stringify(dadosnovos));
+                    api.delete(`/setor/${i}`)
+                    .then(res => {});
+                    mostrarlista();
+                    alert("Dados deletados com sucesso!");
                 }
               },
               {

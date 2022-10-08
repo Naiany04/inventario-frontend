@@ -1,18 +1,24 @@
 import React,{useEffect, useState} from "react";
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
+import api from "../../server/api";
+import { useHistory, useParams } from "react-router-dom";
 
 
 
 export default function Cadastroempresa(){
-  
+    const navigate = useHistory();
     const [nome,setNome] = useState("");
     const [responsavel,setResponsavel] = useState("");
-
-
+    const [contato, setContato] = useState("");
     const [empresa,setEmpresa] = useState([]);
-
     const [msg,setMsg]=useState('');
+    const dados = {
+        nome,
+        responsavel,
+        empresa,
+        contato
+    }
 
     function salvardados(e){
         e.preventDefault();
@@ -26,22 +32,39 @@ export default function Cadastroempresa(){
                                 }else if(responsavel===""){
                                     setMsg("campo responsável está vazio");
                                     index++;
+                                }else if(contato===""){
+                                    setMsg("Campo contato vazio");
+                                    index++;
                                 }
                                 
             if(index===0){
                
-                let listaEmpresa = JSON.parse(localStorage.getItem("cd-empresa")||"[]")
+                // let listaEmpresa = JSON.parse(localStorage.getItem("cd-empresa")||"[]")
             
-                listaEmpresa.push(
-                    {
-                        id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
-                        nome:nome,
-                        responsavel:responsavel,
-                    }
-                )
-                localStorage.setItem("cd-empresa",JSON.stringify(listaEmpresa));
-                alert("Cadastro Salvo com Sucesso!!!!");
-                window.location.href="/listaempresa";
+                // listaEmpresa.push(
+                //     {
+                //         id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
+                //         nome:nome,
+                //         responsavel:responsavel,
+                //     }
+                // )
+                // localStorage.setItem("cd-empresa",JSON.stringify(listaEmpresa));
+                // alert("Cadastro Salvo com Sucesso!!!!");
+                // window.location.href="/listaempresa";
+
+                api.post("empresa", 
+                dados,
+
+                {
+                    Headers: 
+                    {'Content-Type': 'application/json'}
+                }                
+                ).then(function (response){
+                    console.log(response.data);
+
+                    alert("Cadastro Salvo com Sucesso!!!!");
+                    window.location.href='/listaempresa';
+                });
             }  
     
 }
@@ -62,6 +85,12 @@ export default function Cadastroempresa(){
                         type="text"
                         value={responsavel}
                         onChange={e=>setResponsavel(e.target.value)}
+                        />
+                        <label>Contato</label>
+                        <input placeholder="Contato"
+                        type="number"
+                        value={contato}
+                        onChange={e=>setContato(e.target.value)}
                         />
                        <p>{msg}</p>
                         <button className="button_save" type="submit">

@@ -1,16 +1,22 @@
 import React,{useState} from "react";
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
-
-
+import api from "../../server/api";
+import { useHistory, useParams } from "react-router-dom";
 
 export default function Cadastrousuario(){
+    const navigate = useHistory();
     const [nome,setNome] = useState('');
     const [email,setEmail] = useState('');
     const [senha,setSenha] = useState('');
     const [confsenha,setConfSenha] = useState('');
     const [msg,setMsg]=useState('');
     const [valida,setValida] = useState(false);
+    const dados={
+        nome,
+        email,
+        senha
+    }
 
     function validarSenha(){
        
@@ -32,7 +38,8 @@ export default function Cadastrousuario(){
                    }, 4000);
         }
     }
-    function salvardados(e){
+    //async (forma assincrona)
+    async function salvardados(e){
         e.preventDefault();
         validarSenha();
         if(valida===false){
@@ -50,20 +57,23 @@ export default function Cadastrousuario(){
                                     index++;
                                 }
             if(index===0){
-               
-                let listaUser = JSON.parse(localStorage.getItem("cd-usuarios")||"[]")
-            
-                listaUser.push(
-                    {
-                        id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
-                        nome:nome,
-                        email:email,
-                        senha:senha
-                    }
-                )
-                localStorage.setItem("cd-usuarios",JSON.stringify(listaUser));
-                alert("Cadastro Salvo com Sucesso!!!!");
-                window.location.href="/listausuario";
+                api.post("usuario", 
+                dados,
+
+                {
+                    Headers: 
+                    {'Content-Type': 'application/json'}
+                }                
+                ).then(function (response){
+                    console.log(response.data);
+
+                    alert("Cadastro Salvo com Sucesso!!!!");
+                    window.location.href='/listausuario';
+                });
+
+                // localStorage.setItem("cd-usuarios",JSON.stringify(listaUser));
+                // alert("Cadastro Salvo com Sucesso!!!!");
+                
             }  
     }
 }
