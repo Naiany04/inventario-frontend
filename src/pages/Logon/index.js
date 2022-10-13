@@ -1,32 +1,33 @@
-import React,{useState,useEffect} from "react";
+import React,{useState} from "react";
 import '../../global.css';
 import './styles.css';
 import logo from '../../assets/images/logo2.png';
-import { useHistory } from 'react-router-dom';
-import Usuario from '../../server/usuario.json';
+// import { useHistory } from 'react-router-dom';
+// import Usuario from '../../server/usuario.json';
 import api from "../../server/api";
+
 export default function Logon(){
-    const history =useHistory();
-    const [id,setId] = useState(0);
-    const [nome,setNome] = useState('');
+    // const history =useHistory();
+    // const [id,setId] = useState(0);
+    // const [nome,setNome] = useState('');
     const [email,setEmail] = useState('');
     const [senha,setSenha] = useState('');
-    const [msg,setMsg] = useState("");
- 
-    const dados=[
-        {
-           email:email,
-            nome:nome,
-              id:id
-        }
+    const [msg] = useState("");
+   
+    // const dados=[
+    //     {
+    //        email:email,
+    //         nome:nome,
+    //           id:id
+    //     }
 
-    ]
+    // ]
 
     function logar(e){
         e.preventDefault();
       
         
-            let usu;
+            // let usu;
             if(email==="" || senha===""){
                 alert("Campos vazios, verifique!");
             }else{
@@ -46,7 +47,7 @@ export default function Logon(){
                        
                         api.post(`/usuario/logar`,{email:email,senha:senha})
                         .then(res => {
-                          if(res.status==200){
+                          if(res.status===200){
                             let resultado=res.data.usuario;
                                 if(resultado.length>0){
                                     //criei uma variavel do tipo JSON para
@@ -137,7 +138,7 @@ export default function Logon(){
                         <button className="button_login" type="submit">
                             Entrar
                         </button>
-                        <a href="#">Cadastrar Nova Empresa</a>
+                        {/* <a href="#">Cadastrar Nova Empresa</a> */}
                     </form>
 
                 

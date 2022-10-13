@@ -15,7 +15,7 @@ import Cadastrosetor from './pages/cadastroSetor';
 import Editarusuario from './pages/Editarusuario';
 import editarEmpresa from './pages/editarEmpresa';
 import editarPatrimonio from './pages/editarPatrimonio';
-import editarSetor from './pages/editarSetor';
+// import editarSetor from './pages/editarSetor';
 // import editarLotacao from './pages/editarLotacao';
 
 
@@ -39,8 +39,8 @@ export default function Routes(){
                 <Route path={"/editarusuario/:idusuario"}  component={Editarusuario}/>
                 <Route path={"/editarempresa/:idempresa"}  component={editarEmpresa}/>
                 <Route path={"/editapatrimonio/:idpatrimonio"}  component={editarPatrimonio}/>
-                <Route path={"/editasetor/:idsetor"}  component={editarSetor}/>
-                {/* <Route path={"/editalotacao/:idlotacao"}  component={editarLotacao}/> */}
+                {/* <Route path={"/editasetor/:idsetor"}  component={editarSetor}/> 
+                <Route path={"/editalotacao/:idlotacao"}  component={editarLotacao}/> */}
               </Switch>
             </BrowserRouter>
     )
