@@ -31,14 +31,7 @@ export default function Cadastrolotacao() {
     }, [])
 
     function montarselects() {
-        // let listaUsuarios=JSON.parse(localStorage.getItem("cd-usuario")||"[]");
-        // setUsuario(listaUsuarios);      
-        // let listaEmpresas=JSON.parse(localStorage.getItem("cd-empresa")||"[]");
-        // setEmpresa(listaEmpresas);      
-        // let listaSetor=JSON.parse(localStorage.getItem("cd-setor")||"[]");
-        // setSetor(listaSetor);      
-        // let listaPatrimonio=JSON.parse(localStorage.getItem("cd-patrimonio")||"[]");
-        // setPatrimonio(listaPatrimonio);   
+  
         api.get('/usuario')
             .then(res => {
                 if (res.status == 200) {
@@ -131,22 +124,6 @@ export default function Cadastrolotacao() {
 
         if (index === 0) {
 
-            // let listaLotacao = JSON.parse(localStorage.getItem("cd-lotacao")||"[]")
-
-            // listaLotacao.push(
-            //     {
-            //         id:Date.now().toString(36)+Math.floor(Math.pow(10,12)+Math.random()*9*Math.pow(10,12)).toString(36),
-            //         idemp:idemp,
-            //         idpat:idpat,
-            //         idset:idset,
-            //         idusu:idusu,
-            //         lotacao:lotacao
-            //     }
-            // )
-            // localStorage.setItem("cd-lotacao",JSON.stringify(listaLotacao));
-            // alert("Cadastro Salvo com Sucesso!!!!");
-            // window.location.href="/listalotacao";
-
             api.post("lotacao",
                 dados,
 
@@ -168,7 +145,7 @@ export default function Cadastrolotacao() {
         <div className="dashboard-container">
             <Menu />
             <div className="principal">
-                <Head title="Cadastro de Lotações" />
+                <Head title="Editar Lotações" />
                 <section className="form-cadastro">
                     <form onSubmit={salvardados}>
                         <label>Empresa {idusu}</label>

@@ -26,7 +26,6 @@ export default function Listapatrimonio(){
             if(res.status == 200){
                 setDados(res.data.setor);
                 console.log("Status"+res.status);
-
                 console.log(res.data.setor);
             } else {
                 console.log("houve um erro na requisição")
@@ -70,7 +69,7 @@ export default function Listapatrimonio(){
             <Menu/>
               
             <div className="principal">
-                 <Head title ="Lista de Patrimônios" />
+                 <Head title ="Lista de Setores" />
                     <div className="button_new">
                   
                         <a href="/cadastrosetor">

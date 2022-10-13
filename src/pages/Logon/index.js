@@ -4,13 +4,13 @@ import './styles.css';
 import logo from '../../assets/images/logo2.png';
 import { useHistory } from 'react-router-dom';
 import Usuario from '../../server/usuario.json';
-
+import api from "../../server/api";
 export default function Logon(){
     const history =useHistory();
     const [id,setId] = useState(0);
     const [nome,setNome] = useState('');
-    const [email,setEmail] = useState('max@gmail.com');
-    const [senha,setSenha] = useState('123');
+    const [email,setEmail] = useState('');
+    const [senha,setSenha] = useState('');
     const [msg,setMsg] = useState("");
  
     const dados=[
@@ -22,37 +22,101 @@ export default function Logon(){
 
     ]
 
- function logar(e){
-    
-        let usu;
-        if(email==="" || senha===""){
-            alert("Campos vazios, verifique!");
-        }else{
-             usu=Usuario.filter(function(value){
-                return value.email==email && value.senha==senha
-            })
-       
-                if(usu.length>0){
-               
-                    setNome(usu[0].nomeusuario);
-                    setId(usu[0].id);
-                  
-                    localStorage.setItem("usuario",JSON.stringify(dados))
-                    const value=localStorage.getItem("usuario");
-                    const json=JSON.parse(value);
-                    console.log(value);
-                 
-                   history.push('/dashboard');
-    
-
-            }else{
-                alert("Dados não encontrados!")
-            }
-       
-
-        }
+    function logar(e){
+        e.preventDefault();
+      
         
-    }
+            let usu;
+            if(email==="" || senha===""){
+                alert("Campos vazios, verifique!");
+            }else{
+                //  usu=Usuario.filter(function(value){
+                //     return value.email==email && value.senha==senha
+                // })
+           
+                    // if(usu.length>0){
+                   
+                    //     setNome(usu[0].nomeusuario);
+                    //     setId(usu[0].id);
+                      
+                        // localStorage.setItem("usuario",JSON.stringify(dados))
+                        // const value=localStorage.getItem("usuario");
+                        // const json=JSON.parse(value);
+                        // console.log(value);
+                       
+                        api.post(`/usuario/logar`,{email:email,senha:senha})
+                        .then(res => {
+                          if(res.status==200){
+                            let resultado=res.data.usuario;
+                                if(resultado.length>0){
+                                    //criei uma variavel do tipo JSON para
+                                    //armazenar dados na sessionStorege
+                                   
+                                    let session=
+                                    {
+                                        nome:resultado[0].nome,
+                                        email:resultado[0].email,
+                                        id:resultado[0].id
+                                    }
+                                   
+                                    //aqui setamos a chave na sessionStorage
+                                    sessionStorage.setItem("session",JSON.stringify(session))
+    
+                                    window.location.href="/dashboard"
+                                }else{
+                                    sessionStorage.clear();
+                                    alert("Digite Email ou Senha validos")
+                                }
+                    
+                          }else{
+                              console.log("houve um erro na requisição")
+                          }
+              
+                        })  
+                        .catch(function (error) {
+                          console.log(error);
+                        });
+                     
+                       
+        
+    
+                // }else{
+                //     alert("Dados não encontrados!")
+                // }
+           
+    
+            }
+            
+        }
+    
+        // if(email==="" || senha===""){
+        //     alert("Campos vazios, verifique!");
+        // }else{
+        //      usu=Usuario.filter(function(value){
+        //         return value.email==email && value.senha==senha
+        //     })
+       
+        //         if(usu.length>0){
+               
+        //             setNome(usu[0].nomeusuario);
+        //             setId(usu[0].id);
+                  
+        //             localStorage.setItem("usuario",JSON.stringify(dados))
+        //             const value=localStorage.getItem("usuario");
+        //             const json=JSON.parse(value);
+        //             console.log(value);
+                 
+        //            history.push('/dashboard');
+    
+
+        //     }else{
+        //         alert("Dados não encontrados!")
+        //     }
+       
+
+    
+        
+
 
 
     return(
