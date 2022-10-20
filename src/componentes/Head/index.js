@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+// import React, { useEffect, useState } from "react";
 import {FiFilePlus,FiLogOut} from "react-icons/fi"
 import { useHistory } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
@@ -6,9 +7,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 
 export default function Head({title}){
     const history = useHistory();
-    const[nome,setNome] = useState();
-    const[quant,setQuant] = useState();
-    const[dados,setDados] = useState([]);
+    // const[nome,setNome] = useState();
+    // const[quant,setQuant] = useState();
+    // const[dados,setDados] = useState([]);
     const logoff=()=>{
       sessionStorage.removeItem("session")
         window.location.href="/";
@@ -38,7 +39,7 @@ export default function Head({title}){
             <div className="title">
                     
                     <h2>{title}</h2>
-                    <h5>{nome}</h5>
+                    {/* <h5>{nome}</h5> */}
                    
             </div>
             <div className="logoff">

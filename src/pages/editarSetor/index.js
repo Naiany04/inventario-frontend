@@ -8,19 +8,12 @@ import Usuarios from '../../server/usuario.json';
 
 
 export default function Editarusuario(){
-    const {idusuario} =useParams();
+    const {idsetor} =useParams();
     const [nome,setNome] = useState('');
-    const [email,setEmail] = useState('');
-    const [senha,setSenha] = useState('');
-    const [confsenha,setConfSenha] = useState('');
     const [msg,setMsg]=useState('');
-    const [valida,setValida] = useState(false);
-    const [usu,setUsu] = useState(false);
     const dados={
-        id: idusuario,
+        id: idsetor,
         nome,
-        email,
-        senha
     }
     const headers = {
         'Content-Type' : 'application/json'
@@ -43,16 +36,14 @@ export default function Editarusuario(){
                 // }
                 // );
 
-                api.get(`/usuario/${idusuario}`)
+                api.get(`/setor/${idsetor}`)
                 .then(res=> {
                 
                     if(res.status == 200){
-                        let resultado=res.data.usuario;
+                        let resultado=res.data.setor;
                         
                             setNome(resultado[0].nome);
-                            setEmail(resultado[0].email);
-                            setSenha(resultado[0].senha);
-                            setConfSenha(resultado[0].senha);
+
                     } else {
                         console.log("houve um erro na requisição")
                     }
@@ -63,45 +54,25 @@ export default function Editarusuario(){
 
             }
 
-    function validarSenha(){
-       
-        if(senha!=="")
-        {
-                if(senha!==confsenha){
-               
-                    setValida(false);
-                    setMsg("Senhas não conferem!");
-                }else{
-                    setValida(true);
-                    setMsg("Senhas iguais!");
-                }
-        }else{
-                   setValida(false);
-                   setMsg("Campo senha está vazio");
-                   setTimeout(() => {
-                    setMsg('');
-                   }, 4000);
-        }
-    }
     function salvardados(e){
         e.preventDefault();
-        validarSenha();
-        if(valida===false){
-            setMsg("Senhas não Conferem!!!");
-        }else{
+
+        // if(valida===false){
+        //     setMsg("Senhas não Conferem!!!");
+        // }else{
 
                                 let index=0;
                             
-                                if(nome.length<=3){
-                                    setMsg("campo nome precisa ter mais de 3 letras");
-                                    index++;
+        //                         if(nome.length<=3){
+        //                             setMsg("campo nome precisa ter mais de 3 letras");
+        //                             index++;
 
-                                }else if(email===""){
-                                    setMsg("campo email está vazio");
-                                    index++;
-                                }
+        //                         }else if(email===""){
+        //                             setMsg("campo email está vazio");
+        //                             index++;
+        //                         }
             if(index===0){
-                api.patch("usuario", 
+                api.patch("setor", 
                 dados,
 
                 {
@@ -111,18 +82,18 @@ export default function Editarusuario(){
                 ).then(function (response){
                     console.log(response.data);
 
-                    alert("Cadastro salvo com Sucesso!!!!");
-                    window.location.href='/listausuario';
+                    alert("Cadastro Salvo com Sucesso!!!!");
+                    window.location.href='/listasetor';
                 });
                 
-            }
+            
     }
 }
     return(
         <div className="dashboard-container">
             <Menu/>
             <div className="principal">
-                 <Head title ="Editar Usuário" />
+                 <Head title ="Editar Setor" />
                  <section className="form-cadastro">
                     <form onSubmit={salvardados} >
                     
@@ -132,23 +103,7 @@ export default function Editarusuario(){
                         value={nome}
                         onChange={e=>setNome(e.target.value)}
                         />
-                        <label>Email</label>
-                        <input placeholder="Email"
-                        type="email"
-                        value={email}
-                        onChange={e=>setEmail(e.target.value)}
-                        />
-                         <label>Senha</label>
-                        <input placeholder="senha" type="password"
-                        value={senha}
-                        onChange={e=>setSenha(e.target.value)}
-                        />
-                         <label>Confirmar Senha</label>
-                        <input placeholder="confirmar senha" type="password"
-                        value={confsenha}
-                        onKeyUp={validarSenha}
-                        onChange={e=>setConfSenha(e.target.value)}
-                        />
+
                        <p>{msg}</p>
                         <button className="button_save" type="submit">
                             Salvar
@@ -162,5 +117,3 @@ export default function Editarusuario(){
 
 )
 }
-
-//finalizei dia 20/11/2022

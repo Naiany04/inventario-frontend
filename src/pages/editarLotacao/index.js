@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Menu from "../../componentes/Menu";
 import Head from "../../componentes/Head";
-import Usuarios from "../../server/usuario.json";
-import { FiEdit, FiTrash, FiDelete, FiFilePlus } from "react-icons/fi";
+// import {  FiTrash, FiDelete, FiFilePlus } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 // import ListaEmpresa from "../ListaEmpresa";
 import api from "../../server/api";
 
 
 export default function EditarLotacao() {
-    const  {id}  =  useParams();
-    const [idusu, setIusu] = useState(0);
-    const [idemp, setIemp] = useState(0);
-    const [idpat, setPat] = useState(0);
-    const [idset, setSet] = useState(0);
+    const  {idlotacao}  =  useParams();
+    const [idusu, setIusu] = useState("");
+    const [idemp, setIemp] = useState("");
+    const [idpat, setPat] = useState("");
+    const [idset, setSet] = useState("");
     const [lotacao, setLotacao] = useState()
     const [empresa, setEmpresa] = useState([]);
     const [patrimonio, setPatrimonio] = useState([]);
     const [setor, setSetor] = useState([]);
     const [usuario, setUsuario] = useState([]);
     const dados = {
-        id,
+        id: idlotacao,
         idusu,
         idemp,
         idpat,
@@ -46,7 +45,6 @@ function dataFormatada(d){
 
     useEffect(() => {
         mostrarDados();
-        console.log(dados)
     }, [])
 
     function mostrarDados() {
@@ -111,18 +109,14 @@ function dataFormatada(d){
             })
            
 
-            api.get(`/lotacao/${id}`)
+            api.get(`/lotacao/${idlotacao}`)
             .then(res => {
-                setIusu(res.data.lotacao[0].idusu);
-                setIemp(res.data.lotacao[0].idemp);
-                setPat(res.data.lotacao[0].idpat);
-                setSet(res.data.lotacao[0].idset);
+                console.log(res.data.lotacao[0])
+                setIusu(res.data.lotacao[0].usuario);
+                setIemp(res.data.lotacao[0].empresa);
+                setPat(res.data.lotacao[0].patrimonio);
+                setSet(res.data.lotacao[0].setor);
                 setLotacao(dataFormatada(res.data.lotacao[0].lotacao));
-            
-               
-
-             
-             
                 if(res.status==200){
                 }else{
                     console.log("Houve um erro na requisição")
@@ -140,7 +134,7 @@ function dataFormatada(d){
         e.preventDefault();
 
         let index = 0;
-        alert("Louvado seja Deus. Aleluia!");
+        // alert("Louvado seja Deus. Aleluia!");
 
         if (idusu === 0) {
             setMsg("Campo usuário está vazio");
@@ -158,7 +152,7 @@ function dataFormatada(d){
 
         if (index === 0) {
 
-            api.put("lotacao",
+            api.patch("lotacao",
                 dados,
 
                 {
@@ -167,7 +161,7 @@ function dataFormatada(d){
             ).then(function (response) {
                 console.log(response.data);
 
-                alert("Edição Salva com sucesso!!");
+                alert("Edição salva com sucesso!!");
                 window.location.href = '/listalotacao';
             });
         }
@@ -217,7 +211,7 @@ function dataFormatada(d){
 
                         </select>
 
-                        <label>Responsavel</label>
+                        <label>Usuario</label>
                         <select value={idusu} onChange={e => setIusu(e.target.value)}>
                         
                             {usuario.map((usu) => {

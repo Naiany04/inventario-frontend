@@ -50,7 +50,7 @@ export default function Listaempresa(){
                     // dadosnovos=dados.filter(item =>item.id!==i);
                     // setDados(dadosnovos);
                     // localStorage.setItem('cd-empresa',JSON.stringify(dadosnovos));
-                    api.delete(`/usuario/${i}`)
+                    api.delete(`/empresa/${i}`)
                     .then(res => {});
                     mostrarlista();
                     alert("Dados deletados com sucesso!");
